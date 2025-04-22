@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:afvr_editor/globals.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> uploadImageToGitHub({
@@ -9,7 +10,6 @@ Future<String> uploadImageToGitHub({
   final owner = 'WatchAndShootUK';
   final repo = '_afvr_lib';
   final branch = 'main';
-  final githubToken ='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';
 
   final url =
       'https://api.github.com/repos/$owner/$repo/contents/$fileName';
@@ -23,7 +23,7 @@ Future<String> uploadImageToGitHub({
   final response = await http.put(
     Uri.parse(url),
     headers: {
-      'Authorization': 'Bearer $githubToken',
+      'Authorization': 'Bearer $token',
       'Accept': 'application/vnd.github+json',
     },
     body: body,

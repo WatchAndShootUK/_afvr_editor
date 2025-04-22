@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:afvr_editor/globals.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 Future<void> updateVersionFile(bool isNew) async {
   const String repoOwner = 'WatchAndShootUK';
   const String repoName = '_afvr_lib_secure';
-  const String token = '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';
 
   final versionUrl = Uri.parse(
     'https://api.github.com/repos/$repoOwner/$repoName/contents/version.json',
@@ -35,12 +36,16 @@ Future<void> updateVersionFile(bool isNew) async {
       final int oldMajor = versionJson['minor_version'] ?? 0;
       final int newMajor = oldMajor + 1;
       versionJson['major_version'] = newMajor;
-      print('🔢 Major version: $oldMajor → $newMajor');
+      if (kDebugMode) {
+        print('🔢 Major version: $oldMajor → $newMajor');
+      }
     } else {
       final int oldMinor = versionJson['minor_version'] ?? 0;
       final int newMinor = oldMinor + 1;
       versionJson['minor_version'] = newMinor;
-      print('🔢 Minor version: $oldMinor → $newMinor');
+      if (kDebugMode) {
+        print('🔢 Minor version: $oldMinor → $newMinor');
+      }
     }
 
     final String dtg = DateFormat(
@@ -65,15 +70,21 @@ Future<void> updateVersionFile(bool isNew) async {
     );
 
     if (versionWrite.statusCode == 200 || versionWrite.statusCode == 201) {
-      print('✅ Version file updated');
+      if (kDebugMode) {
+        print('✅ Version file updated');
+      }
     } else {
-      print(
+      if (kDebugMode) {
+        print(
         '❌ Failed to update version file: ${versionWrite.statusCode} ${versionWrite.body}',
       );
+      }
     }
   } else {
-    print(
+    if (kDebugMode) {
+      print(
       '❌ Failed to read version file: ${versionResponse.statusCode} ${versionResponse.body}',
     );
+    }
   }
 }

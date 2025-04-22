@@ -1,8 +1,13 @@
 import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/services/get_token.dart';
 import 'package:flutter/material.dart';
 import 'ui/home_page.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized(); // Required before using async things
+
+  token = await fetchGitHubToken(); // Wait until token is ready
   runApp(const MyApp());
 }
 

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:afvr_editor/services/github_write_service.dart';
-import 'package:http/http.dart' as http;
 
 Future<void> splitAndWriteJsonList(
   List<Map<String, dynamic>> inputList,
@@ -29,11 +28,9 @@ Future<void> splitAndWriteJsonList(
   if (currentChunk.isNotEmpty) {
     chunks.add(currentChunk);
   }
-  print('Vehicles split into ' + chunks.length.toString() + 'chunks.');
   for (int i = 0; i < chunks.length; i++) {
     final chunk = chunks[i];
     final fileName = '${baseFileName}_${i + 1}.json';
-    print(isNew);
     await githubWrite(chunk, fileName, isNew);
     if (isNew) {isNew = false;}
   }

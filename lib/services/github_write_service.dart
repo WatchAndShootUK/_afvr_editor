@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/services/get_token.dart';
 import 'package:afvr_editor/services/version_control_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 /// Writes a list of maps to GitHub by converting to a UID-keyed map.
@@ -11,13 +14,14 @@ Future<void> githubWrite(
 ) async {
   const String repoOwner = 'WatchAndShootUK';
   const String repoName = '_afvr_lib_secure';
-  const String token = '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';
 
   final url = Uri.parse(
     'https://api.github.com/repos/$repoOwner/$repoName/contents/$fileName?ref=main',
   );
 
-  print(url);
+  if (kDebugMode) {
+    print(url);
+  }
   // Step 1: Convert list to map using 'uid' as key
   final Map<String, dynamic> jsonData = {
     for (final item in inputData) item['uid'].toString(): item,
@@ -36,9 +40,13 @@ Future<void> githubWrite(
   if (shaResponse.statusCode == 200) {
     final decodedShaResponse = json.decode(shaResponse.body);
     sha = decodedShaResponse['sha'];
-    print('✅ SHA for $fileName: $sha');
+    if (kDebugMode) {
+      print('✅ SHA for $fileName: $sha');
+    }
   } else if (shaResponse.statusCode == 404) {
-    print('📁 $fileName does not exist — will create new file.');
+    if (kDebugMode) {
+      print('📁 $fileName does not exist — will create new file.');
+    }
   } else {
     throw Exception(
       '❌ Failed to get SHA: ${shaResponse.statusCode} ${shaResponse.body}',
@@ -66,9 +74,13 @@ Future<void> githubWrite(
   );
 
   if (writeResponse.statusCode == 200 || writeResponse.statusCode == 201) {
-    print('✅ Successfully wrote $fileName');
+    if (kDebugMode) {
+      print('✅ Successfully wrote $fileName');
+    }
     updateVersionFile(isNew);
   } else {
-    print('❌ Failed to write $fileName: ${writeResponse.statusCode} ${writeResponse.body}');
+    if (kDebugMode) {
+      print('❌ Failed to write $fileName: ${writeResponse.statusCode} ${writeResponse.body}');
+    }
   }
 }

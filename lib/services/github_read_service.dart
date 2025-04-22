@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/services/get_token.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-Future<void> githubRead(String filename, List<Map<String, dynamic>> targetList) async {
+Future<void> githubRead(
+  String filename,
+  List<Map<String, dynamic>> targetList,
+) async {
   const String repoOwner = 'WatchAndShootUK';
   const String repoName = '_afvr_lib_secure';
-  const String token = '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';
 
   if (filename == 'vehicles.json') {
     final contentsUrl = Uri.parse(
@@ -20,17 +25,26 @@ Future<void> githubRead(String filename, List<Map<String, dynamic>> targetList) 
     );
 
     if (contentsResponse.statusCode != 200) {
-      throw Exception('❌ Failed to list repo contents: ${contentsResponse.body}');
+      throw Exception(
+        '❌ Failed to list repo contents: ${contentsResponse.body}',
+      );
     }
 
     final List<dynamic> files = json.decode(contentsResponse.body);
-    final List<String> vehicleFiles = files
-        .where((file) => file['name'].toString().startsWith('vehicles_') && file['name'].toString().endsWith('.json'))
-        .map<String>((file) => file['name'].toString())
-        .toList();
+    final List<String> vehicleFiles =
+        files
+            .where(
+              (file) =>
+                  file['name'].toString().startsWith('vehicles_') &&
+                  file['name'].toString().endsWith('.json'),
+            )
+            .map<String>((file) => file['name'].toString())
+            .toList();
 
     targetList.clear();
-    print(vehicleFiles);
+    if (kDebugMode) {
+      print(vehicleFiles);
+    }
     for (final partFile in vehicleFiles) {
       final partUrl = Uri.parse(
         'https://api.github.com/repos/$repoOwner/$repoName/contents/$partFile',
