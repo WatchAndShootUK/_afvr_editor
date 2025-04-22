@@ -1,5 +1,6 @@
 import 'package:afvr_editor/globals.dart';
 import 'package:afvr_editor/services/get_token.dart';
+import 'package:afvr_editor/widgets/password_gate.dart';
 import 'package:flutter/material.dart';
 import 'ui/home_page.dart';
 
@@ -8,7 +9,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required before using async things
 
   token = await fetchGitHubToken(); // Wait until token is ready
-  runApp(const MyApp());
+    runApp(
+    const MaterialApp(
+      home: PasswordGate(
+        child: MyApp(), // your real app goes here
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
