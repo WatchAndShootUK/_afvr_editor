@@ -3,6 +3,7 @@ import 'package:afvr_editor/services/get_token.dart';
 import 'package:afvr_editor/widgets/password_gate.dart';
 import 'package:flutter/material.dart';
 import 'ui/home_page.dart';
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
 
@@ -10,7 +11,8 @@ void main() async {
 
   token = await fetchGitHubToken(); // Wait until token is ready
     runApp(
-    const MaterialApp(
+    MaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       home: PasswordGate(
         child: MyApp(), // your real app goes here
       ),
@@ -25,26 +27,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'AFVR Editor',
       theme: ThemeData(
-        primaryColor: khakiBrown,
+        primaryColor: wasdColour,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: khakiBrown,
+          seedColor: wasdColour,
           brightness: Brightness.dark,
         ),
         scaffoldBackgroundColor: Colors.black,
         appBarTheme: AppBarTheme(
-          backgroundColor: khakiBrown,
+          backgroundColor: wasdColour,
           foregroundColor: Colors.white,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: khakiBrown,
+            backgroundColor: wasdColour,
             foregroundColor: Colors.white,
           ),
         ),
         tabBarTheme: TabBarTheme(
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
-          indicatorColor: khakiBrown,
+          indicatorColor: wasdColour,
         ),
         useMaterial3: true,
       ),

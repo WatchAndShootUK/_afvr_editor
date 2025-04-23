@@ -1,3 +1,4 @@
+// THIS ONE WORKS
 // lib/widgets/vehicle_editor_dialog.dart
 
 // ignore_for_file: unused_import, deprecated_member_use, avoid_web_libraries_in_flutter, prefer_interpolation_to_compose_strings, use_build_context_synchronously
@@ -5,6 +6,7 @@
 import 'dart:html' as html;
 import 'dart:convert';
 import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
 import 'package:afvr_editor/widgets/item_picker.dart';
@@ -181,18 +183,33 @@ Future<Map<String, dynamic>?> showEditorDialog(
                               );
 
                               List<Widget> section = [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: paddingSize / 2,
-                                  ),
-                                  child: Text(
-                                    properKey,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (properKey != 'Name')
+                                      SizedBox(height: 10),
+                                    if (properKey != 'Name')
+                                      Container(
+                                        height: 2,
+                                        width: double.infinity,
+                                        color: wasdColour,
+                                      ),
+                                    SizedBox(height: 10),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: paddingSize / 2,
+                                      ),
+                                      child: Text(
+                                        properKey,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    SizedBox(height: 10),
+                                  ],
                                 ),
                               ];
 
@@ -209,30 +226,43 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                     padding: const EdgeInsets.only(
                                       bottom: paddingSize,
                                     ),
-                                    child: TextField(
-                                      controller: controller,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                      decoration: InputDecoration(
-                                        labelText: properKey,
-                                        labelStyle: const TextStyle(
+                                    child: SizedBox(
+                                      width:
+                                          properKey == 'Name' ||
+                                                  properKey == 'Family'
+                                              ? 200
+                                              : double.infinity,
+                                      child: TextField(
+                                        maxLength:
+                                            properKey == 'Name' ||
+                                                    properKey == 'Family'
+                                                ? 20
+                                                : null,
+                                        controller: controller,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                         ),
-                                        filled: true,
-                                        fillColor:
-                                            isEmpty
-                                                ? Colors.yellow[700]
-                                                : Colors.grey[850],
-                                        border: const OutlineInputBorder(),
+                                        decoration: InputDecoration(
+                                          labelText: properKey,
+                                          labelStyle: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          filled: true,
+                                          fillColor:
+                                              isEmpty
+                                                  ? Colors.yellow[700]
+                                                  : Colors.grey[850],
+                                          border: const OutlineInputBorder(),
+                                        ),
+                                        onChanged:
+                                            isReadOnly
+                                                ? null
+                                                : (text) => vehicle[key] = text,
+                                        readOnly: isReadOnly,
+                                        maxLines:
+                                            key == 'description' ? null : 1,
+                                        minLines: key == 'description' ? 3 : 1,
                                       ),
-                                      onChanged:
-                                          isReadOnly
-                                              ? null
-                                              : (text) => vehicle[key] = text,
-                                      readOnly: isReadOnly,
-                                      maxLines: key == 'description' ? null : 1,
-                                      minLines: key == 'description' ? 3 : 1,
                                     ),
                                   ),
                                 );
@@ -459,8 +489,17 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
+                                          if (vehicle['recognising_features'] !=
+                                                  null &&
+                                              vehicle['recognising_features']
+                                                  .isNotEmpty &&
+                                              e.key !=
+                                                  vehicle['recognising_features']
+                                                      .keys
+                                                      .first)
+                                            SizedBox(height: 20),
                                           if (isRecognising && e.key.isNotEmpty)
                                             Padding(
                                               padding: const EdgeInsets.only(
@@ -480,9 +519,9 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                                     ),
                                               ),
                                             ),
-                                          Row(
-                                            children: [
-                                              if (isRecognising)
+                                          if (isRecognising)
+                                            Row(
+                                              children: [
                                                 Expanded(
                                                   flex: 2,
                                                   child: Padding(
@@ -497,9 +536,15 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                                         fontStyle:
                                                             FontStyle.italic,
                                                       ),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 ),
+                                              ],
+                                            ),
+                                          Row(
+                                            children: [
                                               if (isRecognising)
                                                 const SizedBox(width: 8),
                                               Expanded(
@@ -513,9 +558,16 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                                     labelText:
                                                         isRecognising
                                                             ? 'Description'
-                                                            : e.key,
+                                                            : properCase(
+                                                              e.key
+                                                                  .toString()
+                                                                  .replaceAll(
+                                                                    '_',
+                                                                    ' ',
+                                                                  ),
+                                                            ),
                                                     labelStyle: const TextStyle(
-                                                      color: Colors.white70,
+                                                      color: Colors.white,
                                                     ),
                                                     filled: true,
                                                     fillColor:
@@ -683,7 +735,6 @@ Future<Map<String, dynamic>?> showEditorDialog(
                             b['name'].toString(),
                           ),
                         );
-                        
                       } else {
                         // updated item
                         final index = vehicles.indexWhere(
@@ -691,36 +742,34 @@ Future<Map<String, dynamic>?> showEditorDialog(
                         );
                         vehicles[index] = vehicle;
                       }
-                      
-                      splitAndWriteJsonList(vehicles,'vehicles', isNew);
 
+                      splitAndWriteJsonList(vehicles, 'vehicles', isNew);
 
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              isNew
-                                  ? vehicle['name'] +
-                                      ' added! ' +
-                                      (errors.isNotEmpty
-                                          ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
-                                          : '\nSaved as complete') +
-                                      uploadCode
-                                  : vehicle['name'] +
-                                      ' updated! ' +
-                                      (errors.isNotEmpty
-                                          ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
-                                          : '\nSaved as complete') +
-                                      uploadCode,
-                            ),
-                            duration: const Duration(seconds: 2),
-                            backgroundColor:
-                                errors.isEmpty
-                                    ? Colors.green[700]
-                                    : Colors.red[700],
+                      scaffoldMessengerKey.currentState?.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            isNew
+                                ? vehicle['name'] +
+                                    ' added! ' +
+                                    (errors.isNotEmpty
+                                        ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
+                                        : '\nSaved as complete') +
+                                    uploadCode
+                                : vehicle['name'] +
+                                    ' updated! ' +
+                                    (errors.isNotEmpty
+                                        ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
+                                        : '\nSaved as complete') +
+                                    uploadCode,
                           ),
-                        );
-                      });
+                          duration: const Duration(seconds: 2),
+                          backgroundColor:
+                              errors.isEmpty
+                                  ? Colors.green[700]
+                                  : Colors.red[700],
+                        ),
+                      );
+
                       Navigator.pop(context, vehicle);
                     },
                     child: const Text(

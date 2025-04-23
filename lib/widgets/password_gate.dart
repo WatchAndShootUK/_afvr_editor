@@ -1,5 +1,7 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:html' as html;
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -51,14 +53,22 @@ Future<bool> _validatePassword(String input) async {
   final url = Uri.parse('https://script.google.com/macros/s/AKfycbySgTTsnK71SjkfWvjFKH6PThZhgMIl6SIaf-nAWALLcR1e5Nhveik3rgWROxL-VwaE/exec?password=$input');
 
   try {
-    print('Sending GET to $url');
+    if (kDebugMode) {
+      print('Sending GET to $url');
+    }
     final response = await http.get(url);
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
+    if (kDebugMode) {
+      print('Response status: ${response.statusCode}');
+    }
+    if (kDebugMode) {
+      print('Response body: ${response.body}');
+    }
 
     return response.statusCode == 200 && response.body.trim() == 'ok';
   } catch (e) {
-    print('Error during HTTP GET: $e');
+    if (kDebugMode) {
+      print('Error during HTTP GET: $e');
+    }
     setState(() => _error = 'Network error');
     return false;
   }

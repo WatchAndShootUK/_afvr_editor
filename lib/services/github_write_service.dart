@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:afvr_editor/globals.dart';
-import 'package:afvr_editor/services/get_token.dart';
 import 'package:afvr_editor/services/version_control_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +26,7 @@ Future<void> githubWrite(
     for (final item in inputData) item['uid'].toString(): item,
   };
 
-  String? sha;
+  String? sha = '';
   final shaResponse = await http.get(
     url,
     headers: {

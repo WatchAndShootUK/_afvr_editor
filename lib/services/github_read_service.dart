@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:afvr_editor/globals.dart';
-import 'package:afvr_editor/services/get_token.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
