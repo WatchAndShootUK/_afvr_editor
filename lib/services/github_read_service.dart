@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -95,6 +96,7 @@ Future<void> githubRead(
           return item;
         }),
       );
+      sortList(targetList);
     } else {
       throw Exception('❌ Failed to read $filename: ${response.body}');
     }

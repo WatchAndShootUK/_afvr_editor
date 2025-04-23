@@ -3,6 +3,7 @@
 import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
+import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:flutter/material.dart';
 
 itemSaveService(
@@ -39,9 +40,8 @@ itemSaveService(
     // Add new item
     isNew = true;
     globalList.add(item);
-    globalList.sort(
-      (a, b) => a['name'].toString().compareTo(b['name'].toString()),
-    );
+
+    sortList(globalList);
   }
 
   githubWrite(globalList, fileName, isNew);

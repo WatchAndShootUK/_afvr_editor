@@ -29,7 +29,9 @@ Future<Map<String, dynamic>?> showWeaponEditorDialog(
             'ammunition': {},
           }
           : json.decode(json.encode(originalWeapon)) as Map<String, dynamic>;
-
+  if (weapon['calibre'] is int) {
+    weapon['calibre'] = '${weapon['calibre']}mm';
+  }
   const paddingSize = 10.0;
 
   final nameController = TextEditingController(text: weapon['name']);
@@ -114,6 +116,7 @@ Future<Map<String, dynamic>?> showWeaponEditorDialog(
                           Padding(
                             padding: const EdgeInsets.only(bottom: paddingSize),
                             child: TextField(
+                              maxLength: 40,
                               controller: descriptorController,
                               style: const TextStyle(color: Colors.white),
                               decoration: InputDecoration(

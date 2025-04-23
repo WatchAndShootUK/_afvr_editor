@@ -9,6 +9,7 @@ import 'package:afvr_editor/globals.dart';
 import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
+import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:afvr_editor/widgets/item_picker.dart';
 import 'package:afvr_editor/widgets/type_picker.dart';
 import 'package:afvr_editor/widgets/vehicle_splitter.dart';
@@ -735,11 +736,8 @@ Future<Map<String, dynamic>?> showEditorDialog(
                       if (isNew) {
                         // new item
                         vehicles.add(vehicle);
-                        vehicles.sort(
-                          (a, b) => a['name'].toString().compareTo(
-                            b['name'].toString(),
-                          ),
-                        );
+
+                        sortList(vehicles);
                       } else {
                         // updated item
                         final index = vehicles.indexWhere(
