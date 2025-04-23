@@ -18,9 +18,6 @@ Future<void> githubWrite(
     'https://api.github.com/repos/$repoOwner/$repoName/contents/$fileName?ref=main',
   );
 
-  if (kDebugMode) {
-    print(url);
-  }
   // Step 1: Convert list to map using 'uid' as key
   final Map<String, dynamic> jsonData = {
     for (final item in inputData) item['uid'].toString(): item,
@@ -75,8 +72,9 @@ Future<void> githubWrite(
   if (writeResponse.statusCode == 200 || writeResponse.statusCode == 201) {
     if (kDebugMode) {
       print('✅ Successfully wrote $fileName');
+      
     }
-    updateVersionFile(isNew);
+    updateVersionFile(isNew, fileName);
   } else {
     if (kDebugMode) {
       print('❌ Failed to write $fileName: ${writeResponse.statusCode} ${writeResponse.body}');

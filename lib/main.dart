@@ -12,7 +12,6 @@ void main() async {
   token = await fetchGitHubToken(); // Wait until token is ready
     runApp(
     MaterialApp(
-      scaffoldMessengerKey: scaffoldMessengerKey,
       home: PasswordGate(
         child: MyApp(), // your real app goes here
       ),
@@ -25,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       title: 'AFVR Editor',
       theme: ThemeData(
         primaryColor: wasdColour,

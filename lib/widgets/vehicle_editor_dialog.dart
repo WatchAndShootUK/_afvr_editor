@@ -289,7 +289,7 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           if (key == 'images' &&
                                               itemName.isNotEmpty)
@@ -323,6 +323,10 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                                       ),
                                                   child: Text(
                                                     itemName,
+                                                    textAlign:
+                                                        key == 'images'
+                                                            ? TextAlign.center
+                                                            : TextAlign.start,
                                                     style: TextStyle(
                                                       color:
                                                           key == 'images'
@@ -678,6 +682,7 @@ Future<Map<String, dynamic>?> showEditorDialog(
                 ),
                 actions: [
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.green),
                     onPressed: () async {
                       final errors = isValid(vehicle);
                       if (errors.isEmpty) {
@@ -745,43 +750,51 @@ Future<Map<String, dynamic>?> showEditorDialog(
 
                       splitAndWriteJsonList(vehicles, 'vehicles', isNew);
 
-                      scaffoldMessengerKey.currentState?.showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            isNew
-                                ? vehicle['name'] +
-                                    ' added! ' +
-                                    (errors.isNotEmpty
-                                        ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
-                                        : '\nSaved as complete') +
-                                    uploadCode
-                                : vehicle['name'] +
-                                    ' updated! ' +
-                                    (errors.isNotEmpty
-                                        ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
-                                        : '\nSaved as complete') +
-                                    uploadCode,
+                      Future.delayed(Duration(milliseconds: 300), () {
+                        scaffoldMessengerKey.currentState?.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              isNew
+                                  ? vehicle['name'] +
+                                      ' added! ' +
+                                      (errors.isNotEmpty
+                                          ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
+                                          : '\nSaved as complete') +
+                                      uploadCode
+                                  : vehicle['name'] +
+                                      ' updated! ' +
+                                      (errors.isNotEmpty
+                                          ? '\nSaved as draft:\n- ${errors.join('\n- ')}'
+                                          : '\nSaved as complete') +
+                                      uploadCode,
+                            ),
+                            duration: const Duration(seconds: 2),
+                            backgroundColor:
+                                errors.isEmpty
+                                    ? Colors.green[700]
+                                    : Colors.red[700],
                           ),
-                          duration: const Duration(seconds: 2),
-                          backgroundColor:
-                              errors.isEmpty
-                                  ? Colors.green[700]
-                                  : Colors.red[700],
-                        ),
-                      );
-
+                        );
+                      });
                       Navigator.pop(context, vehicle);
                     },
                     child: const Text(
                       'SAVE',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

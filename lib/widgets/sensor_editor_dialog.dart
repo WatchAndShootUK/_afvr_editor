@@ -152,9 +152,15 @@ Future<Map<String, dynamic>?> showSensorEditorDialog(
                 ),
                 actions: [
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.green),
                     onPressed: () {
                       if (isValid()) {
-                        itemSaveService(context, sensor, sensors, 'sensors.json');
+                        itemSaveService(
+                          context,
+                          sensor,
+                          sensors,
+                          'sensors.json',
+                        );
                       } else {
                         final List<String> errors = [];
                         if (sensor['name'].toString().trim().isEmpty) {
@@ -205,14 +211,15 @@ Future<Map<String, dynamic>?> showSensorEditorDialog(
                     },
                     child: const Text(
                       'SAVE',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.green),
                     ),
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],

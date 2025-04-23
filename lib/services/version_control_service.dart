@@ -4,10 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-Future<void> updateVersionFile(bool isNew) async {
+Future<void> updateVersionFile(bool isNew, String fileName) async {
   const String repoOwner = 'WatchAndShootUK';
   const String repoName = '_afvr_lib_secure';
-
+  if (['vehicles_1.json', 'armour.json', 'weapons.json', 'sensors.json'].contains(fileName))
+  {
   final versionUrl = Uri.parse(
     'https://api.github.com/repos/$repoOwner/$repoName/contents/version.json',
   );
@@ -87,4 +88,4 @@ Future<void> updateVersionFile(bool isNew) async {
     );
     }
   }
-}
+}}

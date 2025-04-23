@@ -369,9 +369,15 @@ Future<Map<String, dynamic>?> showWeaponEditorDialog(
                 ),
                 actions: [
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.green),
                     onPressed: () {
                       if (isValid()) {
-                        itemSaveService(context,weapon,weapons,'weapons.json');
+                        itemSaveService(
+                          context,
+                          weapon,
+                          weapons,
+                          'weapons.json',
+                        );
                       } else {
                         final List<String> errors = [];
                         if (weapon['name'].toString().trim().isEmpty) {
@@ -438,14 +444,15 @@ Future<Map<String, dynamic>?> showWeaponEditorDialog(
                     },
                     child: const Text(
                       'SAVE',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.green),
                     ),
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],

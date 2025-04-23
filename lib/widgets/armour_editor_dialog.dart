@@ -167,9 +167,15 @@ Future<Map<String, dynamic>?> showArmourEditorDialog(
                 ),
                 actions: [
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.green),
                     onPressed: () {
                       if (isValid()) {
-                        itemSaveService(context,armour,armours, 'armour.json');
+                        itemSaveService(
+                          context,
+                          armour,
+                          armours,
+                          'armour.json',
+                        );
                       } else {
                         final List<String> errors = [];
                         if (armour['name'].toString().trim().isEmpty) {
@@ -220,14 +226,15 @@ Future<Map<String, dynamic>?> showArmourEditorDialog(
                     },
                     child: const Text(
                       'SAVE',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.green),
                     ),
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
                     onPressed: () => Navigator.pop(context),
                     child: const Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
                 ],

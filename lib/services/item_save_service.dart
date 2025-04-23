@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously
 
+import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,8 @@ itemSaveService(
   BuildContext context,
   Map<String, dynamic> item,
   List<Map<String, dynamic>> globalList,
-  String fileName
+  String fileName,
 ) async {
-
   // This section checks to see if an image has been uploaded and sends it to gitHub.
   String uploadCode = '';
   if (item['preview'] is String &&
@@ -39,14 +39,16 @@ itemSaveService(
     // Add new item
     isNew = true;
     globalList.add(item);
-    globalList.sort((a, b) => a['name'].toString().compareTo(b['name'].toString()));
+    globalList.sort(
+      (a, b) => a['name'].toString().compareTo(b['name'].toString()),
+    );
   }
 
   githubWrite(globalList, fileName, isNew);
 
-  // Success message
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    ScaffoldMessenger.of(context).showSnackBar(
+  Navigator.pop(context, item);
+  Future.delayed(Duration(milliseconds: 300), () {
+    scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text(
           isNew
@@ -58,6 +60,4 @@ itemSaveService(
       ),
     );
   });
-
-  Navigator.pop(context, item);
 }
