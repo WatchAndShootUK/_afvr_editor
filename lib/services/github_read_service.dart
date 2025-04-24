@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/services/version_control_service.dart';
 import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -60,14 +61,17 @@ Future<void> githubRead(
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> raw = json.decode(response.body);
-
-        targetList.addAll(
-          raw.entries.map((e) {
-            final item = Map<String, dynamic>.from(e.value);
-            item['uid'] = e.key;
-            return item;
-          }),
-        );
+        if (filename == 'version.json') {
+          version = json.decode(response.body);
+        } else {
+          targetList.addAll(
+            raw.entries.map((e) {
+              final item = Map<String, dynamic>.from(e.value);
+              item['uid'] = e.key;
+              return item;
+            }),
+          );
+        }
       } else {
         throw Exception('❌ Failed to read $partFile: ${response.body}');
       }
@@ -88,15 +92,19 @@ Future<void> githubRead(
     if (response.statusCode == 200) {
       final Map<String, dynamic> raw = json.decode(response.body);
 
-      targetList.clear();
-      targetList.addAll(
-        raw.entries.map((e) {
-          final item = Map<String, dynamic>.from(e.value);
-          item['uid'] = e.key;
-          return item;
-        }),
-      );
-      sortList(targetList);
+      if (filename == 'version.json') {
+        version.value = getVersionCodeString(raw);
+      } else {
+        targetList.clear();
+        targetList.addAll(
+          raw.entries.map((e) {
+            final item = Map<String, dynamic>.from(e.value);
+            item['uid'] = e.key;
+            return item;
+          }),
+        );
+        sortList(targetList);
+      }
     } else {
       throw Exception('❌ Failed to read $filename: ${response.body}');
     }

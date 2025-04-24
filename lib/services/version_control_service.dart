@@ -7,12 +7,25 @@ import 'package:intl/intl.dart';
 Future<void> updateVersionFile(bool isNew, String fileName) async {
   const String repoOwner = 'WatchAndShootUK';
   const String repoName = '_afvr_lib_secure';
-  if (['vehicles_1.json', 'armour.json', 'weapons.json', 'sensors.json'].contains(fileName))
-  {
+
+  // Only update version if file is version-tracked
+  const versionedFiles = [
+    'vehicles_1.json',
+    'armour.json',
+    'weapons.json',
+    'sensors.json',
+  ];
+  if (!versionedFiles.contains(fileName)) {
+    if (kDebugMode) print('ℹ️ Skipping version update for $fileName');
+    return;
+  }
+
+  // Step 1: Build the GitHub URL for version.json
   final versionUrl = Uri.parse(
-    'https://api.github.com/repos/$repoOwner/$repoName/contents/version.json',
+    'https://api.github.com/repos/$repoOwner/$repoName/contents/version.json?ref=main',
   );
 
+  // Step 2: Download the current version.json file
   final versionResponse = await http.get(
     versionUrl,
     headers: {
@@ -22,70 +35,83 @@ Future<void> updateVersionFile(bool isNew, String fileName) async {
     },
   );
 
-  if (versionResponse.statusCode == 200) {
-    final versionData = json.decode(versionResponse.body);
-    final versionSha = versionData['sha'];
-    final encoded = versionData['content'];
-
-    final cleanBase64 = encoded.replaceAll('\n', '');
-    final decoded = utf8.decode(base64Decode(cleanBase64));
-
-    Map<String, dynamic> versionJson = {};
-    versionJson = json.decode(decoded);
-
-    if (isNew) {
-      final int oldMajor = versionJson['minor_version'] ?? 0;
-      final int newMajor = oldMajor + 1;
-      versionJson['major_version'] = newMajor;
-      if (kDebugMode) {
-        print('🔢 Major version: $oldMajor → $newMajor');
-      }
-    } else {
-      final int oldMinor = versionJson['minor_version'] ?? 0;
-      final int newMinor = oldMinor + 1;
-      versionJson['minor_version'] = newMinor;
-      if (kDebugMode) {
-        print('🔢 Minor version: $oldMinor → $newMinor');
-      }
-    }
-
-    final String dtg = DateFormat(
-      "yyyy-MM-dd'T'HH:mm:ss'Z'",
-    ).format(DateTime.now().toUtc());
-    versionJson['last_updated'] = dtg;
-
-    final updatePayload = jsonEncode({
-      'message': 'Increment version',
-      'content': base64Encode(utf8.encode(jsonEncode(versionJson))),
-      'sha': versionSha,
-    });
-
-    final versionWrite = await http.put(
-      versionUrl,
-      headers: {
-        'Authorization': 'token $token',
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'FlutterApp',
-      },
-      body: updatePayload,
-    );
-
-    if (versionWrite.statusCode == 200 || versionWrite.statusCode == 201) {
-      if (kDebugMode) {
-        print('✅ Version file updated');
-      }
-    } else {
-      if (kDebugMode) {
-        print(
-        '❌ Failed to update version file: ${versionWrite.statusCode} ${versionWrite.body}',
+  if (versionResponse.statusCode != 200) {
+    if (kDebugMode) {
+      print(
+        '❌ Failed to fetch version.json: ${versionResponse.statusCode} ${versionResponse.body}',
       );
-      }
     }
+    return;
+  }
+
+  final versionData = json.decode(versionResponse.body);
+  final String? sha = versionData['sha'];
+  final String? encoded = versionData['content'];
+
+  // Step 3: Validate and decode the content
+  if (sha == null || encoded == null) {
+    if (kDebugMode) print('❌ Missing "sha" or "content" from GitHub response');
+    return;
+  }
+
+  if (kDebugMode) print('📦 Current SHA for version.json: $sha');
+
+  final decodedContent = utf8.decode(
+    base64Decode(encoded.replaceAll('\n', '')),
+  );
+  Map<String, dynamic> versionJson = json.decode(decodedContent);
+
+  // Step 4: Modify the version data
+  if (isNew) {
+    final oldMajor = versionJson['major_version'] ?? 0;
+    versionJson['major_version'] = oldMajor + 1;
+    if (kDebugMode)
+      print(
+        '🔢 Major version incremented: $oldMajor → ${versionJson['major_version']}',
+      );
+  } else {
+    final oldMinor = versionJson['minor_version'] ?? 0;
+    versionJson['minor_version'] = oldMinor + 1;
+    if (kDebugMode)
+      print(
+        '🔢 Minor version incremented: $oldMinor → ${versionJson['minor_version']}',
+      );
+  }
+  version.value = getVersionCodeString(versionJson);
+
+  versionJson['last_updated'] = DateFormat(
+    "yyyy-MM-dd'T'HH:mm:ss'Z'",
+  ).format(DateTime.now().toUtc());
+
+  // Step 5: Encode and prepare payload for update
+  final updatePayload = jsonEncode({
+    'message': 'Update version.json from Flutter WebApp',
+    'content': base64Encode(utf8.encode(jsonEncode(versionJson))),
+    'sha': sha,
+  });
+
+  // Step 6: Upload the updated version.json using PUT
+  final updateResponse = await http.put(
+    versionUrl,
+    headers: {
+      'Authorization': 'token $token',
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'FlutterApp',
+    },
+    body: updatePayload,
+  );
+
+  // Step 7: Handle the result
+  if (updateResponse.statusCode == 200 || updateResponse.statusCode == 201) {
+    if (kDebugMode) print('✅ version.json updated successfully.');
   } else {
     if (kDebugMode) {
       print(
-      '❌ Failed to read version file: ${versionResponse.statusCode} ${versionResponse.body}',
-    );
+        '❌ Failed to update version.json: ${updateResponse.statusCode} ${updateResponse.body}',
+      );
     }
   }
-}}
+}
+
+String getVersionCodeString(Map<String, dynamic> input) {
+  return '${input['build_version']}.${input['major_version']}.${input['minor_version']}';}

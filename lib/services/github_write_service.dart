@@ -74,7 +74,7 @@ Future<void> githubWrite(
       print('✅ Successfully wrote $fileName');
       
     }
-    updateVersionFile(isNew, fileName);
+    await updateVersionFile(isNew, fileName);
   } else {
     if (kDebugMode) {
       print('❌ Failed to write $fileName: ${writeResponse.statusCode} ${writeResponse.body}');
