@@ -65,6 +65,7 @@ Future<void> updateVersionFile(bool isNew, String fileName) async {
   if (isNew) {
     final oldMajor = versionJson['major_version'] ?? 0;
     versionJson['major_version'] = oldMajor + 1;
+    versionJson['minor_version'] = 0; // Reset minor version.
     if (kDebugMode)
       print(
         '🔢 Major version incremented: $oldMajor → ${versionJson['major_version']}',

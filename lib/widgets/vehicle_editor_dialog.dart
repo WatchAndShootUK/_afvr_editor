@@ -745,8 +745,14 @@ Future<Map<String, dynamic>?> showEditorDialog(
                         );
                         vehicles[index] = vehicle;
                       }
-
-                      splitAndWriteJsonList(vehicles, 'vehicles', isNew);
+                      splitAndWriteJsonList(
+                        vehicles,
+                        'vehicles',
+                        originalVehicle['status'] == 'draft' &&
+                                vehicle['status'] == 'completed'
+                            ? true
+                            : false, // Only updates major version if draft vehicle is completed.
+                      );
 
                       Future.delayed(Duration(milliseconds: 300), () {
                         scaffoldMessengerKey.currentState?.showSnackBar(
