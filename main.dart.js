@@ -7824,24 +7824,26 @@ s=J.aj(p)
 if(s.h(p,"sensors")==null)s.m(p,"sensors",[])
 if(s.h(p,o)==null)s.m(p,o,[])
 if(s.h(p,n)==null)s.m(p,n,[])
-return A.nX(new A.arZ(p,A.b(["name","family","crew","status","description","types","armament","protection","sensors","images",m,"about","dimensions","engine"],t.s),A.c3(["status"],t.N),new A.as_(B.cd,new A.as2()),new A.as0()),a,t.a)},
+return A.nX(new A.arZ(p,A.b(["name","family","crew","status","description","types","armament","protection","sensors","images",m,"about","dimensions","engine"],t.s),A.c3(["status"],t.N),new A.as_(B.cd,new A.as2()),new A.as0(),b),a,t.a)},
 as2:function as2(){},
 as_:function as_(a,b){this.a=a
 this.b=b},
 as0:function as0(){},
 as1:function as1(){},
-arZ:function arZ(a,b,c,d,e){var _=this
+arZ:function arZ(a,b,c,d,e,f){var _=this
 _.a=a
 _.b=b
 _.c=c
 _.d=d
-_.e=e},
-arY:function arY(a,b,c,d,e){var _=this
+_.e=e
+_.f=f},
+arY:function arY(a,b,c,d,e,f){var _=this
 _.a=a
 _.b=b
 _.c=c
 _.d=d
-_.e=e},
+_.e=e
+_.f=f},
 arV:function arV(a,b,c,d,e){var _=this
 _.a=a
 _.b=b
@@ -7913,9 +7915,11 @@ _.d=d
 _.e=e},
 arw:function arw(){},
 arB:function arB(a){this.a=a},
-arW:function arW(a,b,c){this.a=a
-this.b=b
-this.c=c},
+arW:function arW(a,b,c,d){var _=this
+_.a=a
+_.b=b
+_.c=c
+_.d=d},
 arN:function arN(a){this.a=a},
 arO:function arO(a){this.a=a},
 arP:function arP(a,b,c,d){var _=this
@@ -25909,7 +25913,8 @@ if(k==null||j==null){s=1
 break}i=B.ah.ci(0,B.Z.ci(0,B.zX.d0(A.e7(j,"\n",""))))
 l=J.aj(i)
 if(a){h=l.h(i,"major_version")
-l.m(i,"major_version",J.hr(h==null?0:h,1))}else{g=l.h(i,"minor_version")
+l.m(i,"major_version",J.hr(h==null?0:h,1))
+l.m(i,"minor_version",0)}else{g=l.h(i,"minor_version")
 l.m(i,"minor_version",J.hr(g==null?0:g,1))}$.ata().sq(0,A.aDe(i))
 J.df(i,"last_updated",A.aIb("yyyy-MM-dd'T'HH:mm:ss'Z'").za(new A.dG(Date.now(),0,!1).anH()))
 l=B.bB.d0(B.ah.pW(i,null))
@@ -41433,7 +41438,7 @@ return s.gb6(a)&&J.aGQ(s.gdQ(a),this)}return!0},
 $S:111}
 A.arZ.prototype={
 $1(a){var s=this
-return new A.jK(new A.arY(s.a,s.b,s.c,s.d,s.e),null)},
+return new A.jK(new A.arY(s.a,s.b,s.c,s.d,s.e,s.f),null)},
 $S:82}
 A.arY.prototype={
 $2(a,b){var s,r,q=this,p=null,o=q.a,n=J.aG(o,"name")
@@ -41441,7 +41446,7 @@ n=A.c5("Edit: "+A.k(n==null?"Vehicle":n),p,p,p,p,B.T,p,p)
 s=q.b
 r=A.a1(s).i("f2<1,i>")
 r=A.cO(A.ae6(new A.b7(B.mm,A.dp(A.a5(new A.f2(s,new A.arV(o,q.c,b,a,q.d),r),!0,r.i("l.E")),B.aG,B.G,B.a8),p),p,B.a4,p,p,B.ay),p,500)
-return A.lL(A.b([A.fP(!1,B.Sr,p,p,p,p,p,p,new A.arW(q.e,o,a),p,A.l4(p,p,p,p,p,p,p,p,p,B.dl,p,p,p,p,p,p,p,p,p)),A.fP(!1,B.St,p,p,p,p,p,p,new A.arX(a),p,A.l4(p,p,p,p,p,p,p,p,p,B.ci,p,p,p,p,p,p,p,p,p))],t.p),B.l,r,n)},
+return A.lL(A.b([A.fP(!1,B.Sr,p,p,p,p,p,p,new A.arW(q.e,o,q.f,a),p,A.l4(p,p,p,p,p,p,p,p,p,B.dl,p,p,p,p,p,p,p,p,p)),A.fP(!1,B.St,p,p,p,p,p,p,new A.arX(a),p,A.l4(p,p,p,p,p,p,p,p,p,B.ci,p,p,p,p,p,p,p,p,p))],t.p),B.l,r,n)},
 $S:76}
 A.arV.prototype={
 $1(a){var s,r,q,p,o,n,m=this,l=null,k="Add item",j="recognising_features",i=m.a,h=J.aG(i,a),g=m.b.p(0,a),f=A.avX(A.e7(a,"_"," ")),e=t.p,d=A.b([],e),c=f!=="Name"
@@ -41715,12 +41720,14 @@ s=12
 break
 case 13:a.m(c,"images",i)
 f=!B.b.jd($.nZ,new A.arN(c))
-a=$.nZ
-if(f){a.push(c)
-A.aw1($.nZ)}else{e=B.b.H4(a,new A.arO(c))
-$.nZ[e]=c}A.asN($.nZ,"vehicles",f)
+o=$.nZ
+if(f){o.push(c)
+A.aw1($.nZ)}else{e=B.b.H4(o,new A.arO(c))
+$.nZ[e]=c}o=$.nZ
+a=J.e(J.aG(q.c,"status"),"draft")&&J.e(a.h(c,"status"),"completed")
+A.asN(o,"vehicles",a)
 A.oF(A.dh(0,300),new A.arP(d,f,c,b),t.P)
-A.ex(q.c,!1).hE(c)
+A.ex(q.d,!1).hE(c)
 return A.M(null,r)}})
 return A.N($async$$0,r)},
 $S:9}
