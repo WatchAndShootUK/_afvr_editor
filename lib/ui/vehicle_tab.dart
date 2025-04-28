@@ -22,9 +22,10 @@ class _VehicleTabState extends State<VehicleTab> {
         children: [
           SizedBox(height: 20),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   showEditorDialog(context, {});
                 },
                 icon: const Icon(Icons.add),
@@ -34,6 +35,7 @@ class _VehicleTabState extends State<VehicleTab> {
                   foregroundColor: Colors.white,
                 ),
               ),
+              SizedBox(width: 10,),
               aiAddButton(context),
             ],
           ),

@@ -9,7 +9,6 @@ import 'package:afvr_editor/globals.dart';
 import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
-import 'package:afvr_editor/ui/ui_elements/multiline_paste_dialog.dart';
 import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:afvr_editor/widgets/item_picker.dart';
 import 'package:afvr_editor/widgets/type_picker.dart';
@@ -159,8 +158,6 @@ Future<Map<String, dynamic>?> showEditorDialog(
 
     return returnErrors; // valid!
   }
-
-  bool isValidAtStart = isValid(originalVehicle).isEmpty ? true : false;
 
   return showDialog<Map<String, dynamic>>(
     context: context,
@@ -713,7 +710,6 @@ Future<Map<String, dynamic>?> showEditorDialog(
                           fileName: filename,
                         );
                       }
-
 
                       int i = 0;
                       List<String> cleanedImages = [];
