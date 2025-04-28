@@ -9,6 +9,7 @@ import 'package:afvr_editor/globals.dart';
 import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_write_service.dart';
 import 'package:afvr_editor/services/github_upload_service.dart';
+import 'package:afvr_editor/ui/ui_elements/multiline_paste_dialog.dart';
 import 'package:afvr_editor/utils/sort_list.dart';
 import 'package:afvr_editor/widgets/item_picker.dart';
 import 'package:afvr_editor/widgets/type_picker.dart';
@@ -16,11 +17,13 @@ import 'package:afvr_editor/widgets/vehicle_splitter.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:afvr_editor/utils/proper_case.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Future<Map<String, dynamic>?> showEditorDialog(
   BuildContext context,
   Map<String, dynamic> originalVehicle,
 ) {
+  Map<String, String> recognisingFeaturePreviews = {};
   final uuid = const Uuid();
 
   final Map<String, dynamic> vehicle =
@@ -157,6 +160,8 @@ Future<Map<String, dynamic>?> showEditorDialog(
     return returnErrors; // valid!
   }
 
+  bool isValidAtStart = isValid(originalVehicle).isEmpty ? true : false;
+
   return showDialog<Map<String, dynamic>>(
     context: context,
     builder:
@@ -164,9 +169,14 @@ Future<Map<String, dynamic>?> showEditorDialog(
           builder:
               (context, setState) => AlertDialog(
                 backgroundColor: Colors.black,
-                title: Text(
-                  'Edit: ${vehicle['name'] ?? 'Vehicle'}',
-                  style: const TextStyle(color: Colors.white),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Edit: ${vehicle['name'] ?? 'Vehicle'}',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
                 content: SizedBox(
                   width: 500,
@@ -511,7 +521,8 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                                 bottom: 6,
                                               ),
                                               child: Image.network(
-                                                preview ??
+                                                recognisingFeaturePreviews[e
+                                                        .key] ??
                                                     'https://raw.githubusercontent.com/WatchAndShootUK/_afvr_lib/main/${e.key}',
                                                 height: 150,
                                                 fit: BoxFit.cover,
@@ -642,10 +653,10 @@ Future<Map<String, dynamic>?> showEditorDialog(
                                               final newName = generateUID(
                                                 vehicle['name'],
                                               );
-                                              value[newName] = {
-                                                'preview': previewUrl,
-                                                '': '',
-                                              };
+                                              recognisingFeaturePreviews[newName] =
+                                                  previewUrl;
+                                              value[newName] =
+                                                  ''; // Just set description empty for now
                                               setState(() {});
                                             });
                                           }
@@ -693,25 +704,16 @@ Future<Map<String, dynamic>?> showEditorDialog(
                       }
                       String uploadCode = '';
                       // Normalize recognising_features and images before returning
-                      final features = vehicle['recognising_features'];
-                      if (features is Map) {
-                        final cleanMap = <String, String>{};
-                        for (var entry in features.entries) {
-                          if (entry.value is String) {
-                            cleanMap[entry.key] = entry.value;
-                          } else if (entry.value is Map &&
-                              entry.value[''] is String) {
-                            cleanMap[entry.key] = entry.value[''];
+                      for (final entry in recognisingFeaturePreviews.entries) {
+                        final filename = entry.key;
+                        final previewBase64 = entry.value;
 
-                            // IMAGE UPLOADED
-                            uploadCode = await uploadImageToGitHub(
-                              base64Image: entry.value['preview'],
-                              fileName: entry.key,
-                            );
-                          }
-                        }
-                        vehicle['recognising_features'] = cleanMap;
+                        uploadCode = await uploadImageToGitHub(
+                          base64Image: previewBase64,
+                          fileName: filename,
+                        );
                       }
+
 
                       int i = 0;
                       List<String> cleanedImages = [];

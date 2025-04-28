@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:afvr_editor/ui/ui_elements/ai_add_button.dart';
 import 'package:afvr_editor/ui/ui_elements/item_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:afvr_editor/widgets/vehicle_editor_dialog.dart';
@@ -20,20 +21,21 @@ class _VehicleTabState extends State<VehicleTab> {
       child: Column(
         children: [
           SizedBox(height: 20),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton.icon(
-              onPressed: () async {
-                await showEditorDialog(context, {});                
-                setState(() {});
-              },
-              icon: const Icon(Icons.add),
-              label: const Text("Add Vehicle"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[700],
-                foregroundColor: Colors.white,
+          Row(
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  showEditorDialog(context, {});
+                },
+                icon: const Icon(Icons.add),
+                label: const Text("Add Vehicle"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[700],
+                  foregroundColor: Colors.white,
+                ),
               ),
-            ),
+              aiAddButton(context),
+            ],
           ),
           const SizedBox(height: 20),
           Expanded(

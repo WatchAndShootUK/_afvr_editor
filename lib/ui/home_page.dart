@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:afvr_editor/globals.dart';
+import 'package:afvr_editor/main.dart';
 import 'package:afvr_editor/services/github_read_service.dart';
 import 'package:flutter/material.dart';
 import 'package:afvr_editor/ui/vehicle_tab.dart';
@@ -16,14 +17,24 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with RouteAware{
   bool isLoading = true;
   @override
   void initState() {
     super.initState();
     loadAll();
   }
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  routeObserver.subscribe(this, ModalRoute.of(context)!);
+}
 
+@override
+void dispose() {
+  routeObserver.unsubscribe(this);
+  super.dispose();
+}
   Future<void> loadAll() async {
     setState(() => isLoading = true);
 
