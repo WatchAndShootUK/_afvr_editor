@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:html' as html;
 
-import 'package:afvr_editor/ui/ui_elements/multiline_paste_dialog.dart';
 import 'package:afvr_editor/widgets/vehicle_editor_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
