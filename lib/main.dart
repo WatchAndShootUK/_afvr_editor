@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
           ),
         ),
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
           indicatorColor: wasdColour,
